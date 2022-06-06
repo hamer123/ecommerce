@@ -1,4 +1,4 @@
-package com.pw.ecommerce.order.presentation.api;
+package com.pw.ecommerce.order.presentation.order.api;
 
 import com.pw.ecommerce.order.domain.OrderService;
 import lombok.RequiredArgsConstructor;

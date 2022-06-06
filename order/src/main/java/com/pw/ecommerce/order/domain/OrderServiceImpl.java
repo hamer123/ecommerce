@@ -1,6 +1,7 @@
 package com.pw.ecommerce.order.domain;
 
 import com.pw.ecommerce.order.domain.customer.Customer;
+import com.pw.ecommerce.order.domain.customer.CustomerPort;
 import com.pw.ecommerce.order.domain.pricing.PricingPort;
 import com.pw.ecommerce.order.domain.warehouse.WarehousePort;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class OrderServiceImpl implements OrderService {
 
     private final EventPublisher eventPublisher;
 
+    private final CustomerPort customerPort;
+
     @Override
     public Order create(String customerId, List<Product> products) {
         //reserve goods
@@ -29,8 +32,8 @@ public class OrderServiceImpl implements OrderService {
         //get goods prizes
         var productsWithPrice = pricingPort.getPricing(toProductIds(products));
 
-        //todo pobierz customera
-        var customer = Customer.builder().customerId(customerId).build();
+        //get customer
+        var customer = customerPort.getById(customerId);
 
         //create order with status created
         var order = orderFactory.create(customer, productsWithPrice);
