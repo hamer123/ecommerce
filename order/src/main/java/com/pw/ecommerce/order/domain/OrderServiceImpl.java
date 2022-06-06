@@ -24,25 +24,19 @@ public class OrderServiceImpl implements OrderService {
 
     private final CustomerPort customerPort;
 
+    private final OrderRepository orderRepository;
+
     @Override
     public Order create(String customerId, List<Product> products) {
-        //reserve goods
         var productsReservation = warehousePort.reserve(products);
-
-        //get goods prizes
         var productsWithPrice = pricingPort.getPricing(toProductIds(products));
-
-        //get customer
         var customer = customerPort.getById(customerId);
 
-        //create order with status created
         var order = orderFactory.create(customer, productsWithPrice);
 
         warehousePort.confirmReservation(productsReservation.reserveId());
 
-        //emmit event order created
         eventPublisher.publish(new OrderCreatedEvent(order));
-        //todo emmit
 
         return order;
     }
@@ -52,7 +46,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void payment(String orderId) {
-        //zaplacono xd
+    public void initializeForPayment(String orderId) {
+        var order = orderRepository.getById(orderId);
+        order.initializeForPayment();
+
+        //event do uslugi platnosci? czy tez rest?
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void collectGoods(String orderId) {
+        var order = orderRepository.getById(orderId);
+        order.collectGoods();
+        orderRepository.save(order);
     }
 }

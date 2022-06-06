@@ -10,8 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static com.pw.ecommerce.order.domain.Money.ZERO_PLN;
-import static com.pw.ecommerce.order.domain.OrderStatus.CREATED;
-import static com.pw.ecommerce.order.domain.OrderStatus.WAITING_FOR_PAYMENT;
+import static com.pw.ecommerce.order.domain.OrderStatus.*;
 
 @Aggregate
 
@@ -42,7 +41,23 @@ public class Order {
         status = WAITING_FOR_PAYMENT;
     }
 
-    public Money calculatePrizeOfGoods() {
+    public void paymentFailed() {
+        if (!status.equals(WAITING_FOR_PAYMENT)) {
+            throw new RuntimeException("Illegal status!");
+        }
+
+        status = PAYMENT_FAILED;
+    }
+
+    public void collectGoods() {
+        if (!status.equals(WAITING_FOR_PAYMENT)) {
+            throw new RuntimeException("Illegal status!");
+        }
+
+        status = COLLECTING_GOODS;
+    }
+
+    private Money calculatePrizeOfGoods() {
         return products.stream()
                 .map(product ->
                         product.getPrize().multiple(BigDecimal.valueOf(product.getQuantity()))
