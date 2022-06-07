@@ -6,26 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "client")
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class OrderEntity {
-
+class ClientEntity {
     @Id
-    private String id;
-
-    @ManyToOne
-    private ClientEntity client;
+    private String customerId;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatusEntity status;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductEntity> products;
+    private CustomerLoyaltyEntity customerLoyalty;
 }

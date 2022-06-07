@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 
 import static com.pw.ecommerce.order.domain.Money.ZERO_PLN;
@@ -24,6 +25,7 @@ public class Order {
     private List<Product> products;
     private OrderStatus status;
     private Money cost;
+    private final Instant created;
 
     private DiscountPolicy discountPolicy;
 

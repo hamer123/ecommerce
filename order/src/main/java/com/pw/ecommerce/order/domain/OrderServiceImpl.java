@@ -41,10 +41,6 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private static List<String> toProductIds(List<Product> products) {
-        return products.stream().map(Product::getProductId).collect(Collectors.toList());
-    }
-
     @Override
     public void initializeForPayment(String orderId) {
         var order = orderRepository.getById(orderId);
@@ -59,5 +55,9 @@ public class OrderServiceImpl implements OrderService {
         var order = orderRepository.getById(orderId);
         order.collectGoods();
         orderRepository.save(order);
+    }
+
+    private static List<String> toProductIds(List<Product> products) {
+        return products.stream().map(Product::getProductId).collect(Collectors.toList());
     }
 }
